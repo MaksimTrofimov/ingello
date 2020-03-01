@@ -19,5 +19,29 @@ class Router
     public function run()
     {
         $uri = $this->getUri();
+
+        foreach ($this->routes as $key => $route) {
+            if ($key == $uri) {
+                $path = $route;
+            }
+        }
+
+        if (!isset($path)) {
+            $this->response404();
+        }
+
+        $path = explode('/', $path);
+
+        $controllerName = ucfirst(array_shift($path)) . 'Controller';
+        $methodName = array_shift($path);
+
+        $obj = new $controllerName();
+        $obj->$methodName();
+    }
+
+    private function response404()
+    {
+        http_response_code(404);
+        die('404');
     }
 }
