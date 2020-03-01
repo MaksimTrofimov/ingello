@@ -32,7 +32,7 @@ class Router
 
         $path = explode('/', $path);
 
-        $controllerName = ucfirst(array_shift($path)) . 'Controller';
+        $controllerName = 'App\Controllers\\' . ucfirst(array_shift($path)) . 'Controller';
         $methodName = array_shift($path);
 
         $obj = new $controllerName();
