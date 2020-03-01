@@ -2,6 +2,8 @@
 
 class Router
 {
+    const URI_DEFAULT = 'default';
+
     private $routes;
     private $config;
 
@@ -19,6 +21,10 @@ class Router
     public function run()
     {
         $uri = $this->getUri();
+
+        if (!$uri) {
+            $uri = self::URI_DEFAULT;
+        }
 
         foreach ($this->routes as $key => $route) {
             if ($key == $uri) {
