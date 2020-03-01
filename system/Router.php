@@ -22,8 +22,14 @@ class Router
     {
         $path = $this->searchRoute();
 
-        $controllerName = 'App\Controllers\\' . ucfirst(array_shift($path)) . 'Controller';
-        $methodName = array_shift($path);
+        if (in_array($path[0], $this->config['modules'])) {
+            $namespace = 'App\Modules\\' . ucfirst(array_shift($path)) . '\Controllers\\';
+        } else {
+            $namespace = 'App\Controllers\\';
+        }
+
+        $controllerName = $namespace . ucfirst(array_shift($path)) . 'Controller';
+        $methodName = array_shift($path) ?? 'index';
 
         $obj = new $controllerName();
         $obj->$methodName();
@@ -32,6 +38,7 @@ class Router
     private function searchRoute()
     {
         $uri = $this->getUri();
+        $uri = preg_replace('/(\?{1}).+/', '', $uri);
 
         if (!$uri) {
             $uri = self::URI_DEFAULT;
