@@ -20,6 +20,17 @@ class Router
 
     public function run()
     {
+        $path = $this->searchRoute();
+
+        $controllerName = 'App\Controllers\\' . ucfirst(array_shift($path)) . 'Controller';
+        $methodName = array_shift($path);
+
+        $obj = new $controllerName();
+        $obj->$methodName();
+    }
+
+    private function searchRoute()
+    {
         $uri = $this->getUri();
 
         if (!$uri) {
@@ -35,15 +46,10 @@ class Router
         if (!isset($path)) {
             $this->response404();
         }
-
         $path = explode('/', $path);
-
-        $controllerName = 'App\Controllers\\' . ucfirst(array_shift($path)) . 'Controller';
-        $methodName = array_shift($path);
-
-        $obj = new $controllerName();
-        $obj->$methodName();
+        return $path;
     }
+
 
     private function response404()
     {
